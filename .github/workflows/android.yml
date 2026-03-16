@@ -1,0 +1,37 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Projeyi çek
+        uses: actions/checkout@v4
+
+      - name: Java 17 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Gradle Wrapper'a izin ver
+        run: chmod +x ./gradlew
+
+      - name: Debug APK build
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: APK dosyalarını bul
+        if: always()
+        run: find . -type f | grep "\.apk" || true
+
+      - name: APK yükle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: app/build/outputs/apk/debug/*.apk
