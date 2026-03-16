@@ -31,7 +31,7 @@ jobs:
           find . -maxdepth 3 -type f | sort
 
       - name: Debug APK build
-        run: gradle assembleDebug --stacktrace --info
+        run: gradle :app:assembleDebug --stacktrace --info
 
       - name: APK dosyalarini bul
         if: always()
@@ -42,5 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: |
-            app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
